@@ -11,6 +11,7 @@ const GameScreen = () => {
   const intervalRef = useRef(null);
   const timerRef = useRef(null);
   const [sound, setSound] = useState(null);
+  const ballsQuantity = 90;
 
   const initSound = require("../assets/sounds/inicio_sarah.mp3");
   const finalSound = require("../assets/sounds/final_sarah.mp3");
@@ -131,11 +132,18 @@ const GameScreen = () => {
     // Lógica para generar una nueva bola que no esté en el array de bolas ya generadas
     let newBall;
     do {
-      newBall = Math.floor(Math.random() * 90) + 1;
+      newBall = Math.floor(Math.random() * ballsQuantity) + 1;
     } while (balls.includes(newBall));
-    setBalls((prevBalls) => [...prevBalls, newBall]);
+    //setBalls((prevBalls) => [...prevBalls, newBall]);
+    setBalls(balls => [...balls, newBall]);
     setTimer(0);
     playSoundBall(newBall);
+    //console.log(balls.length + "_" + ballsQuantity + "_" + balls);
+    if (balls.length === ballsQuantity-1) {
+        setTimeout(() => {
+            handleEndGame();
+        }, 3000);
+    }
   };
 
   const playSoundBall = async (ballNumber) => {
@@ -237,7 +245,7 @@ const playSound = async (soundVar) => {
       <Button
         title="Generate Ball"
         onPress={generateBall}
-        disabled={!isGameStarted || !isGameActive}
+        disabled={!isGameStarted || isGameActive}
       />
       <Button
         title={
